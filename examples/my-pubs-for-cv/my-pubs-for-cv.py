@@ -28,7 +28,7 @@ print "Retrieved %i publications since %i, with a total of %i citations" % (len(
 
 with open(outputbib, "w") as bib_file:
 	now = time.strftime("%Y-%m-%d %H:%M")
-	bib_file.write("My publications last retrieved from ADS at %s" % now)
+	bib_file.write("My publications last retrieved from ADS at %s \n \n" % now)
 	for p in my_pubs:
 		try:
 			bib_file.write("%s" % p.bibtex)
