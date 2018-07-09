@@ -12,11 +12,11 @@ from .config import EXPORT_URL
 
 class ExportResponse(APIResponse):
     """
-    Data structure that represents a response from the ads metrics service
+    Data structure that represents a response from the ads export service
     """
-    def __init__(self, raw):
-        self._raw = raw
-        self.result = json.loads(raw)['export']
+    def __init__(self, http_response):
+        self._raw = http_response.text
+        self.result = http_response.json()['export']
 
     def __str__(self):
         if six.PY3:
@@ -29,17 +29,18 @@ class ExportResponse(APIResponse):
 
 class ExportQuery(BaseQuery):
     """
-    Represents a query to the adsws metrics service
+    Represents a query to the adsws export service
     """
 
     HTTP_ENDPOINT = EXPORT_URL
-    FORMATS = ['bibtex', 'endnote', 'aastex']
+    FORMATS = ['bibtex', 'endnote', 'aastex',
+               'ris', 'icarus', 'mnras', 'soph']
 
     def __init__(self, bibcodes, format="bibtex"):
         """
-        :param bibcodes: Bibcodes to send to in the metrics query
+        :param bibcodes: Bibcodes to send to in the export query
         :type bibcodes: list or string
-        :param format: format to
+        :param format: format to export to
         """
         assert format in self.FORMATS, "Format must be one of {}".format(
             self.FORMATS)
@@ -54,7 +55,7 @@ class ExportQuery(BaseQuery):
 
     def execute(self):
         """
-        Execute the http request to the metrics service
+        Execute the http request to the export service
         :return ads-classic formatted export string
         """
         url = os.path.join(self.HTTP_ENDPOINT, self.format)
